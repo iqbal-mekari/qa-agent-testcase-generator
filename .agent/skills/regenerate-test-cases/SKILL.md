@@ -199,6 +199,12 @@ Regenerate the full CSV with:
 **Filename:** Same as original, or `{identifier}_test_cases_v2.csv`
 if user prefers versioning.
 
+**IMPORTANT — Direct file writing only:**
+Write updated CSV content directly using `create_file` or
+`replace_string_in_file`. Do NOT create Python scripts, shell scripts,
+or any helper programs to generate the output. The agent has all the
+data needed and must write the files itself in a single step.
+
 ## Preconditions for Regeneration
 
 Before running this skill, verify:

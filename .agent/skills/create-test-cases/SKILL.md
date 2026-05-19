@@ -178,6 +178,11 @@ Rules:
 - Full CSV contains all test cases (Smoke + Regression)
 - Smoke CSV contains only Category=Smoke test cases
 
+**IMPORTANT — Direct file writing only:**
+Write CSV content directly using `create_file`. Do NOT create Python scripts,
+shell scripts, or any helper programs to generate the output. The agent
+has all the data needed and must write the files itself in a single step.
+
 ## Coverage Directives
 
 ### Requirement Coverage

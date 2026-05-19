@@ -156,6 +156,12 @@ Both skills deliver to three destinations:
 2. **Full CSV** — All test cases saved to `/test-cases/{identifier}_test_cases.csv`
 3. **Smoke CSV** — Smoke-only subset saved to `/test-cases/{identifier}_smoke_tests.csv`
 
+**IMPORTANT — No helper scripts:**
+All output must be produced directly by the agent using `create_file`
+and MCP tools. Never create Python scripts, shell scripts, or any
+intermediary programs to generate CSV or Jira output. The agent
+already has all the data — write it directly.
+
 ## Guiding Principles
 
 - **Mobile UI only**: Every test case must validate a mobile screen
