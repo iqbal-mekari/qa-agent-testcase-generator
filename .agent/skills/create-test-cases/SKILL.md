@@ -111,8 +111,25 @@ Each test case **must** include:
 | **Preconditions** | Device, OS version, user role, screen context, navigation state |
 | **Steps** | Numbered mobile UI actions (tap, swipe, scroll, type, navigate) |
 | **Expected Result** | Observable visual outcome (element visible/hidden, text, screen state) |
+| **Category** | `Smoke` or `Regression` |
 | **Priority** | P0 (Critical), P1 (Important), P2 (Nice-to-have) |
 | **Tags** | UI, Visual, Navigation, Interaction, Negative, Boundary, Permission, Offline, Platform |
+
+### Category Assignment Rules
+
+**Smoke** — Assign when ALL conditions are met:
+- Core happy path flow (the primary user journey)
+- Feature is fundamentally broken if this test fails
+- No edge cases, boundary conditions, or error scenarios
+- Minimum viable interaction to validate the feature works
+- Typically P0 priority
+
+**Regression** — Assign for everything else:
+- Edge cases and boundary tests
+- Negative scenarios and error handling
+- Permission and offline failures
+- Platform-specific edge behaviors
+- Secondary or alternative flows
 
 ## Output Format
 
@@ -128,19 +145,29 @@ Post via `mcp_atlassian_addCommentToJiraIssue` with
 
 ### Feature Area: [Name]
 
-| ID | Title | Preconditions | Steps | Expected Result | Priority | Tags |
-|----|-------|---------------|-------|-----------------|----------|------|
-| TC001 | User able to ... | - Precondition | 1. Step 1\n2. Step 2 | Expected behavior | P0 | Functional |
+#### Smoke Tests (Happy Path)
+
+| ID | Title | Preconditions | Steps | Expected Result | Category | Priority | Tags |
+|----|-------|---------------|-------|-----------------|----------|----------|------|
+| TC001 | User able to ... | - Precondition | 1. Step 1\n2. Step 2 | Expected behavior | Smoke | P0 | UI |
+
+#### Regression Tests
+
+| ID | Title | Preconditions | Steps | Expected Result | Category | Priority | Tags |
+|----|-------|---------------|-------|-----------------|----------|----------|------|
+| TC003 | User not able to ... | - Precondition | 1. Step 1\n2. Step 2 | Error state visible | Regression | P1 | Negative |
 ```
 
-### CSV File
+### CSV Files
 
 **Directory:** `/test-cases/`
-**Filename:** `{epic_key}_{short_desc}_test_cases.csv`
 
-**Columns:**
+**Full CSV:** `{epic_key}_{short_desc}_test_cases.csv`
+**Smoke CSV:** `{epic_key}_{short_desc}_smoke_tests.csv`
+
+**Columns (both files):**
 ```
-Ticket,Ticket Title,Feature Area,TC ID,Title,Preconditions,Steps,Expected Result,Priority,Tags
+Ticket,Ticket Title,Feature Area,TC ID,Title,Preconditions,Steps,Expected Result,Category,Priority,Tags
 ```
 
 Rules:
@@ -148,6 +175,8 @@ Rules:
 - Escape commas and quotes within fields
 - Include header row
 - Sort by Ticket, then TC ID
+- Full CSV contains all test cases (Smoke + Regression)
+- Smoke CSV contains only Category=Smoke test cases
 
 ## Coverage Directives
 
@@ -214,3 +243,6 @@ When Figma designs are available:
 - [ ] Priority distribution is realistic
 - [ ] Tags are correctly assigned
 - [ ] Figma states covered (if design provided)
+- [ ] Smoke tests cover only core happy paths (no edge/boundary/negative)
+- [ ] Every feature area has at least one Smoke test case
+- [ ] Smoke CSV generated alongside full CSV

@@ -127,16 +127,34 @@ All test cases follow a consistent structure regardless of skill:
 | Preconditions | Concrete setup requirements (device, OS, screen context) |
 | Steps | Numbered, single mobile UI actions (tap, swipe, type, scroll, navigate) |
 | Expected Result | Observable visual outcome (element visible/hidden, text content, screen state) |
+| Category | `Smoke` or `Regression` (see categorization rules below) |
 | Priority | P0 (Critical), P1 (Important), P2 (Nice-to-have) |
 | Tags | UI, Visual, Navigation, Interaction, Negative, Boundary, Permission, Offline, Platform |
 
+### Category Assignment Rules
+
+**Smoke** — Mark a test case as Smoke when ALL of the following are true:
+- Validates a core user flow (critical happy path)
+- Tests the minimum viable user journey for the feature
+- If this test fails, the feature is fundamentally broken
+- Contains NO error handling, edge cases, or boundary conditions
+- Typically P0 priority
+
+**Regression** — Everything else:
+- Edge cases and boundary conditions
+- Negative scenarios and error handling
+- Permission/offline failures
+- Platform-specific edge behaviors
+- Secondary flows and non-critical interactions
+
 ## Output Destinations
 
-Both skills deliver to the same two destinations:
+Both skills deliver to three destinations:
 
 1. **Jira Comment** — Posted via `mcp_atlassian_addCommentToJiraIssue`
    with `contentFormat: markdown`
-2. **CSV File** — Saved to `/test-cases/{identifier}_test_cases.csv`
+2. **Full CSV** — All test cases saved to `/test-cases/{identifier}_test_cases.csv`
+3. **Smoke CSV** — Smoke-only subset saved to `/test-cases/{identifier}_smoke_tests.csv`
 
 ## Guiding Principles
 
