@@ -1,20 +1,38 @@
 ---
 name: regenerate-test-cases
 description: >
-  Update existing test cases when code changes are detected. Accepts git
-  diffs, PR references, or existing test case CSVs as input. Identifies
-  affected test cases and produces updated/new/removed test cases.
-  Maintains traceability between code changes and test coverage.
+  Update existing mobile UI test cases when code changes are detected.
+  Accepts git diffs, PR references, or existing test case CSVs as input.
+  Identifies affected UI test cases and produces updated/new/removed cases.
+  Focuses exclusively on mobile visual/interaction test cases. Does NOT
+  generate API, web, or backend test cases.
   Trigger: regenerate test cases, update test cases, refresh test cases,
   sync test cases with code.
 ---
 
 # Regenerate Test Cases Skill
 
-Updates existing test cases based on code changes. Compares source code
-modifications against existing test coverage and produces incremental
-updates — adding new cases, modifying affected ones, and flagging
-obsolete cases for removal.
+Updates existing mobile UI test cases based on code changes. Compares
+source code modifications against existing test coverage and produces
+incremental updates — adding new UI cases, modifying affected ones,
+and flagging obsolete cases for removal.
+
+## Scope Restriction
+
+**ONLY regenerate test cases for mobile app UI interactions.**
+
+When analyzing code diffs, focus on changes that affect:
+- Screen layouts and widget trees
+- Navigation flows and routing
+- UI state management (Bloc states → screen rendering)
+- Form widgets and validation display
+- Visual feedback (loading, error, empty states)
+
+Ignore changes that only affect:
+- API endpoints or HTTP clients (unless they change visible UI state)
+- Database schemas or queries
+- Backend logic without UI impact
+- Web-specific code
 
 ## Trigger Keywords
 
@@ -98,25 +116,29 @@ Output: Jira Comment + Updated CSV
 
 | Code Change Type | Test Impact |
 |-----------------|-------------|
-| New API endpoint | New test cases for endpoint behaviors |
-| Modified validation logic | Update expected results on related TCs |
-| New UI screen/widget | New test cases for screen states |
-| Removed feature | Flag related TCs as REMOVED |
+| New UI screen/widget | New test cases for screen states and interactions |
+| Modified widget layout | Update visual assertions on related TCs |
 | Changed navigation flow | Update steps on affected TCs |
-| New error handling | New negative test cases |
-| Modified data model | Update preconditions and assertions |
-| New permission check | New permission test cases |
+| New loading/error state handling | New visual state test cases |
+| Removed screen/feature | Flag related TCs as REMOVED |
+| Modified form validation display | Update expected validation messages |
+| New permission-gated UI | New permission test cases (UI access) |
+| Changed gesture interactions | Update interaction steps |
 
 ### File Pattern → Feature Area Mapping
 
-Analyze file paths to determine feature areas:
+Analyze file paths to determine UI-impacting areas:
 
-- `**/screens/**`, `**/pages/**` → UI screen test cases
-- `**/bloc/**`, `**/cubit/**` → State management cases
-- `**/repository/**`, `**/datasource/**` → API/data layer cases
-- `**/models/**`, `**/entities/**` → Data validation cases
-- `**/routes/**`, `**/navigation/**` → Navigation flow cases
-- `**/widgets/**`, `**/components/**` → Component interaction cases
+- `**/screens/**`, `**/pages/**` → Screen state & navigation test cases
+- `**/bloc/**`, `**/cubit/**` → UI state rendering test cases
+- `**/widgets/**`, `**/components/**` → Component interaction test cases
+- `**/routes/**`, `**/navigation/**` → Navigation flow test cases
+- `**/theme/**`, `**/styles/**` → Visual appearance test cases
+
+Ignore (no UI test impact):
+- `**/repository/**`, `**/datasource/**` → Skip (API layer)
+- `**/models/**`, `**/entities/**` → Skip (data layer)
+- `**/services/**` → Skip (backend logic)
 
 ## Output Format
 

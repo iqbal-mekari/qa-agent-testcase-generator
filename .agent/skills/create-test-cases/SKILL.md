@@ -1,17 +1,33 @@
 ---
 name: create-test-cases
 description: >
-  Generate structured, exhaustive integration test cases from Jira tickets,
-  PRDs, Figma designs, or feature descriptions. Covers happy paths, edge
-  cases, negative scenarios, and visual assertions. Outputs as Jira ticket
-  comments and consolidated CSV in /test-cases/.
+  Generate structured, exhaustive mobile UI test cases from Jira tickets,
+  PRDs, Figma designs, or feature descriptions. Focuses exclusively on
+  visual validation and user interactions on mobile apps (Android/iOS).
+  Does NOT generate API, web, or backend test cases. Outputs as Jira
+  ticket comments and consolidated CSV in /test-cases/.
 ---
 
 # Create Test Cases Skill
 
-Generates integration test cases for automated visual and functional
+Generates mobile UI test cases for automated visual and interaction
 testing, scoped to a specific Jira task, PRD, Figma design, or feature
 description.
+
+## Scope Restriction
+
+**ONLY generate test cases for mobile app UI.**
+
+- ✅ Screen states (loading, empty, error, success)
+- ✅ User interactions (tap, swipe, scroll, type, long-press)
+- ✅ Navigation flows between screens
+- ✅ Visual element assertions (visible, hidden, text content, enabled/disabled)
+- ✅ Platform-specific behavior (Android vs iOS)
+- ❌ API endpoint testing
+- ❌ Web/browser testing
+- ❌ Backend/service testing
+- ❌ Database testing
+- ❌ Performance/load testing
 
 ## Input Sources (Priority Order)
 
@@ -92,11 +108,11 @@ Each test case **must** include:
 |-------|-------------|
 | **ID** | Sequential (TC001, TC002, ...) |
 | **Title** | `User able to ...` (happy) / `User not able to ...` (negative) |
-| **Preconditions** | Test data, user role, feature flags, API state, navigation context |
-| **Steps** | Numbered, single-action steps executable by automation |
-| **Expected Result** | Observable, verifiable system behavior |
+| **Preconditions** | Device, OS version, user role, screen context, navigation state |
+| **Steps** | Numbered mobile UI actions (tap, swipe, scroll, type, navigate) |
+| **Expected Result** | Observable visual outcome (element visible/hidden, text, screen state) |
 | **Priority** | P0 (Critical), P1 (Important), P2 (Nice-to-have) |
-| **Tags** | Functional, UI, API, Negative, Boundary, Permission, Offline, Platform, Visual |
+| **Tags** | UI, Visual, Navigation, Interaction, Negative, Boundary, Permission, Offline, Platform |
 
 ## Output Format
 
@@ -144,36 +160,40 @@ Rules:
 ### Edge Cases & Negative Scenarios
 
 For every happy path, generate:
-- **Invalid inputs**: empty, null, special characters, max length
-- **Boundary conditions**: min/max values, pagination limits, empty
-  lists, single item
-- **Permission failures**: unauthorized access, disabled features
-- **Network failures**: offline, timeout, 4xx/5xx responses
-- **State transitions**: back navigation, app backgrounding
+- **Invalid inputs**: empty fields, special characters, max length in text inputs
+- **Boundary conditions**: min/max values in form fields, empty lists, single item
+- **Permission failures**: unauthorized screen access, disabled UI elements
+- **Network failures**: offline state, loading timeout (visual indicators)
+- **State transitions**: back navigation, app backgrounding, screen rotation
+- **Platform differences**: Android back button vs iOS swipe-back
 
-### Visual & Integration Focus
+### Mobile UI Visual Focus
 
 Prioritize assertions on:
-- Screen navigation correctness
-- Widget visibility after state changes
-- Loading states (skeleton → content / error)
-- Empty states (illustration + message)
-- Error states (error widget + retry button, toasts)
-- Form interactions (focus, inline validation, submit state)
-- Pull-to-refresh behavior
-- Scroll & pagination
-- Platform differences (Android vs iOS)
-- Deep linking accessibility
+- Screen navigation correctness (correct screen rendered after action)
+- Widget visibility after state changes (loading → content → error)
+- Loading states (skeleton/shimmer visible, replaced by content on success)
+- Empty states (illustration + message visible when no data)
+- Error states (error widget visible + retry button + toast messages)
+- Form interactions (field focus, inline validation messages, submit button state)
+- Pull-to-refresh behavior (indicator visible, content refreshes)
+- Scroll & pagination (load-more indicator, new items appended)
+- Platform differences (Android Material vs iOS Cupertino)
+- Deep linking (correct screen opens from external link)
+- Bottom sheet / modal behavior (appears, dismissible, content correct)
+- Tab navigation (active state, content switches)
+- Gesture interactions (swipe-to-delete, drag-to-reorder)
 
 ### Figma-Driven Assertions
 
 When Figma designs are available:
-- Assert component presence matching design specs
-- Verify text content matches design copy
-- Validate state variants (hover, pressed, disabled, selected)
-- Check responsive behavior if multiple frames exist
-- Verify icon and illustration presence
-- Validate color/style tokens if design system rules available
+- Assert component presence matching mobile design specs
+- Verify text content matches design copy on mobile screens
+- Validate state variants (pressed, disabled, selected, focused)
+- Verify icon and illustration presence per screen
+- Validate spacing and layout per mobile breakpoint
+- Check component variants across light/dark mode
+- Verify bottom navigation and tab bar states
 
 ### Priority Guidelines
 
