@@ -1,105 +1,144 @@
 # QA Agent UI Automation
 
-Custom GitHub Copilot agent for comprehensive test case generation and maintenance.
+Custom GitHub Copilot agents and skills for mobile UI test case generation, Maestro script authoring, and automated test debugging — scoped to Flutter-based Android/iOS apps.
 
-## 🎯 Agent: qa-test-case-generator
+## Agents
 
-Located in `.agent/` — automatically detected by GitHub Copilot for this repository.
+### `qa-test-case-generator`
 
-### Capabilities
+Senior Mobile QA Engineer agent. Generates exhaustive, automation-ready UI test cases from Jira tickets, PRDs, Figma designs, or free-text feature descriptions. Outputs results as Jira comments and consolidated CSV files in `/test-cases/`.
 
-1. **Create Test Cases** — Generate exhaustive integration test cases from:
-   - Jira tickets
-   - PRD/Confluence documents
-   - Figma designs
-   - Free-text feature descriptions
+**Scope:** Mobile app UI only (screen states, interactions, navigation, visual assertions). Does not generate API, web, or backend test cases.
 
-2. **Regenerate Test Cases** — Update test cases based on:
-   - Git diffs (branch comparisons)
-   - Pull request changes
-   - Existing test case CSVs
+**Trigger phrases:** `create test cases`, `generate test cases`, `mobile test cases`, `ui test cases`, `visual test cases`, `self-test`, `test case from ticket`, `test case from PRD`, `regenerate test cases`, `update test cases`, `test cases from Figma`
 
-### How to Use
+---
 
-#### Create Test Cases
+### `maestro-script-creator`
 
-Ask Copilot to create test cases:
+Orchestrator agent for producing production-ready Maestro UI test scripts from a test case file (CSV, spreadsheet, Jira export). Handles planning, screen mapping, triage (automate / needs setup / skip), mapping table confirmation, testcase YAML authoring, and scenario composition.
 
-```
-@copilot Create test cases for https://jurnal.atlassian.net/browse/QON-12345
+**Trigger phrases:** `maestro`, `UI test`, `test automation`, `test script`, `test scenario`, `automate`, `CSV test cases`, `Maestro script`, `create Maestro tests`, `generate maestro`
 
-@copilot Generate test cases from this PRD: https://jurnal.atlassian.net/wiki/...
+**Delegates to:** `maestro-testcase-writer`, `maestro-scenario-composer`, `maestro-selector-debugger`
 
-@copilot Create integration test cases for a contact form with name, phone, and email fields
-```
+---
 
-#### Regenerate Test Cases
+### `maestro-script-debugger`
 
-Update test cases when code changes:
+Autonomous debugging orchestrator for failing Maestro flows. Runs the failing flow, captures screenshots and view hierarchy, diagnoses the root cause, probes fixes inline, applies them, re-runs to verify, and records new failure patterns in the knowledge base.
 
-```
-@copilot Regenerate test cases for branch feature/new-contact-form
+**Trigger phrases:** `debug maestro`, `maestro fails`, `maestro error`, `element not found`, `flow failed`, `fix maestro test`, `maestro assertion failed`, `maestro broken`
 
-@copilot Update test cases based on this PR: https://github.com/.../pull/123
+**Delegates to:** `maestro-selector-debugger`, `maestro-testcase-writer`, `maestro-scenario-composer`
 
-@copilot Refresh test cases against /test-cases/QON_contact_test_cases.csv
-```
+---
 
-### Output
+### `maestro-testcase-writer` _(sub-agent, not user-invocable)_
 
-Test cases are delivered to:
+Writes a single atomic Maestro testcase YAML file. Handles selector discovery from live UI and Flutter source, localization key mapping, syntax validation, and inline probing via Maestro MCP before saving. Invoked by `maestro-script-creator`.
 
-1. **Jira Comments** — Posted on the source ticket
-2. **CSV Files** — Consolidated in `/test-cases/` directory
+---
 
-### Trigger Phrases
+### `maestro-scenario-composer` _(sub-agent, not user-invocable)_
 
-The agent activates on these keywords:
+Composes a Maestro scenario YAML that orchestrates atomic testcases into end-to-end user journeys. Handles `onFlowStart` lifecycle hooks, `runFlow` orchestration, state resets between independent error paths, and end-to-end validation. Invoked by `maestro-script-creator`.
 
-- `create test cases`, `generate test cases`
-- `integration test`, `self-test`
-- `test case from ticket`, `test case from PRD`
-- `regenerate test cases`, `update test cases`
-- `test cases from Figma`, `visual test cases`
+---
 
-### Skills
+### `maestro-selector-debugger` _(sub-agent, not user-invocable)_
 
-| Skill | Purpose |
-|-------|---------|
-| `create-test-cases` | Generate new test cases from requirements |
-| `regenerate-test-cases` | Update test cases based on code changes |
+Diagnoses and fixes failing Maestro selectors. Takes a screenshot, inspects the view hierarchy, probes corrected selectors inline, and returns a verified fix (selector update or `Semantics` change). Invoked by `maestro-script-debugger` or `maestro-script-creator`.
 
-See `.agent/skills/` for skill documentation.
+---
+
+## Skills
+
+| Skill                   | Purpose                                                                                                                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `create-test-cases`     | Generate structured mobile UI test cases from Jira tickets, PRDs, Figma designs, or feature descriptions. Outputs as Jira comments and CSV in `/test-cases/`.                   |
+| `regenerate-test-cases` | Update existing mobile UI test cases when code changes are detected (git diffs, PRs, or existing CSVs). Adds new cases, modifies affected ones, and flags obsolete cases.       |
+| `create-maestro-script` | Create Maestro testcase and scenario YAML files for Flutter apps from a CSV test plan. Covers folder structure, selector strategies, localization patterns, and test execution. |
+| `debug-maestro-script`  | Debug failing Maestro flows (exit code 1, element not found, assertion failures, broken selectors). Follows a read → run → screenshot → hierarchy → probe → fix → re-run loop.  |
 
 ## Structure
 
 ```
-.agent/
-├── AGENTS.md                              ← Agent definition
-└── skills/
-    ├── create-test-cases/
-    │   └── SKILL.md                       ← Creation skill
-    └── regenerate-test-cases/
-        └── SKILL.md                       ← Regeneration skill
+agents/
+├── qa-test-case-generator.md              ← Test case generation agent
+├── maestro-script-creator.agent.md        ← Maestro script orchestrator
+├── maestro-script-debugger.agent.md       ← Maestro debugging orchestrator
+├── maestro-testcase-writer.agent.md       ← Atomic testcase writer (sub-agent)
+├── maestro-scenario-composer.agent.md     ← Scenario composer (sub-agent)
+└── maestro-selector-debugger.agent.md     ← Selector diagnosis (sub-agent)
+
+skills/
+├── create-test-cases/
+│   └── SKILL.md
+├── regenerate-test-cases/
+│   └── SKILL.md
+├── create-maestro-script/
+│   ├── SKILL.md
+│   └── references/
+│       ├── flutter-semantics.md
+│       ├── scenario_template.yaml
+│       └── testcase_template.yaml
+└── debug-maestro-script/
+    ├── SKILL.md
+    └── references/
+        └── failure-patterns.md
 ```
 
-## Repository-Specific Configuration
+## How to Use
 
-This agent configuration is committed to this repository and will be:
-- ✅ Detected automatically by GitHub Copilot
-- ✅ Available only for contributors to this repo
-- ✅ Inherited by all clones of this repository
-- ✅ Updated via git commits
+### Generate test cases
 
-## Customization
+```
+Create test cases for https://jurnal.atlassian.net/browse/QON-12345
 
-To modify the agent or skills:
+Generate test cases from this PRD: https://jurnal.atlassian.net/wiki/...
 
-1. Edit files in `.agent/`
-2. Commit changes to git
-3. Push to repository
+Create UI test cases for a contact form with name, phone, and email fields
+```
+
+### Regenerate test cases after code changes
+
+```
+Regenerate test cases for branch feature/new-contact-form
+
+Update test cases based on this PR: https://github.com/.../pull/123
+
+Refresh test cases against /test-cases/QON_contact_test_cases.csv
+```
+
+### Create Maestro UI test scripts
+
+```
+Create Maestro tests from test-cases/login_cases.csv
+
+Generate Maestro testcases for the login screen
+
+Automate the checkout flow using this CSV
+```
+
+### Debug a failing Maestro flow
+
+```
+Debug maestro — maestro/testcases/login/tap_login_button.yaml fails with element not found
+
+Fix maestro test: scenarios/checkout/checkout_full_journey.yaml exits with code 1
+```
+
+## Output
+
+| Agent                     | Output                                                      |
+| ------------------------- | ----------------------------------------------------------- |
+| `qa-test-case-generator`  | Jira comments + CSV in `/test-cases/`                       |
+| `maestro-script-creator`  | YAML files in `maestro/testcases/` and `maestro/scenarios/` |
+| `maestro-script-debugger` | Fixed YAML files + updated `failure-patterns.md`            |
+
 4. GitHub Copilot will automatically use the updated configuration
 
 ---
 
-*Managed by: GitHub Copilot with custom agent skills*
+_Managed by: GitHub Copilot with custom agent skills_

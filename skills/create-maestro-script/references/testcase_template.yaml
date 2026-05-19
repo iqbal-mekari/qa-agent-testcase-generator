@@ -1,0 +1,29 @@
+# testcases/<feature>/<action>_<target>.yaml
+#
+# Description: Brief description of what this testcase validates
+# Screen: <Feature>Screen
+# Priority: P0 | P1 | P2
+# Env: (list any required env variables)
+
+appId: ${APP_ID}
+env:
+  TESTCASE_NAME: <action>_<target>
+tags:
+  - testcase
+  - <feature>
+---
+### ARRANGE
+# Set up the initial state
+# If this testcase needs external data, use env variables:
+#   ${<FEATURE>_<DATA>} — passed from scenario via runFlow env:
+
+### ACT
+# Perform the action being tested
+# Use localization keys for all visible strings
+# - tapOn: ${output.localization.<localization_key>}
+# - inputText: "<test_input_value>"
+
+### ASSERT
+# Verify the expected outcome
+# - assertVisible: ${output.localization.<expected_result_key>}
+# - assertVisible: .*/<route_pattern>.*

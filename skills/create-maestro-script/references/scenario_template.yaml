@@ -1,0 +1,66 @@
+# scenarios/<feature>/<user_journey>.yaml
+#
+# Description: Brief description of the user journey
+# Coverage: <Feature>Screen → <NextScreen> → ...
+# Priority: P0 | P1 | P2
+
+appId: ${APP_ID}
+env:
+  SCENARIO_NAME: <feature>_<user_journey>
+  # Test credentials - use environment variables or test accounts
+  USERNAME: 'test.account@yopmail.com'
+  PASSWORD: 'TestPassword123'
+  PIN: '888888'
+  # Feature-specific test data
+  <FEATURE>_<DATA>: 'Test Name'
+tags:
+  - scenario
+  - <feature>
+  - <tag1>
+
+# Lifecycle hooks - executes before/after the flow
+# onFlowStart: Runs once before any commands execute (app launch, setup)
+# onFlowComplete: Runs once after all commands complete successfully (cleanup, teardown)
+onFlowStart:
+  # Launch app with clean state
+  - launchApp:
+      clearState: true
+      clearKeychain: true
+      stopApp: true
+      permissions: { all: allow }
+
+  # Setup platform/locale configuration (default: id for Bahasa Indonesia)
+  - runFlow: ../../utils/setup_platform_locale.yaml
+
+  # Login flow (use the shared login commons for your project)
+  - runFlow: ../../commons/login.yaml
+
+
+# No onFlowComplete needed for most scenarios
+---
+### ARRANGE
+# Set up scenario state
+
+### ACT
+# Execute testcases in order (happy path first)
+# Navigate to feature screen
+
+# Perform feature-specific actions
+# Pass env variables to testcases that need test data
+# - runFlow:
+#     file: ../../testcases/<feature>/select_option.yaml
+#     env:
+#       <FEATURE>_<DATA>: '${<FEATURE>_<DATA>}'
+
+# Verify and proceed through screens
+# - runFlow: ../../testcases/<feature>/verify_<screen>.yaml
+# - runFlow: ../../testcases/<feature>/navigate_to_next.yaml
+
+# Complete the flow (e.g., confirm action, submit form)
+# - runFlow: ../../testcases/<feature>/confirm_action.yaml
+
+# Verify final state
+# - runFlow: ../../testcases/<feature>/verify_success.yaml
+
+### ASSERT
+# Verify final state
