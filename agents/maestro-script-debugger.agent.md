@@ -42,7 +42,7 @@ Read and follow ALL rules in the skill document before starting:
 - Delegate scenario recomposition to `maestro-scenario-composer`
   when a scenario structure must change.
 - Record any new failure pattern discovered in
-  `.github/skills/debug-maestro-script/references/failure-patterns.md`.
+  `skills/debug-maestro-script/references/failure-patterns.md`.
 
 ## Constraints
 
@@ -99,7 +99,7 @@ Run all three in parallel:
    - `rid` (resource-id) if text is unstable
 
 7. **Match to a known failure pattern** in
-   `.github/skills/debug-maestro-script/references/failure-patterns.md`.
+   `skills/debug-maestro-script/references/failure-patterns.md`.
 
 8. **Delegate to `maestro-selector-debugger`** if:
    - The failing command is a `tapOn`, `assertVisible`, or

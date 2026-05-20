@@ -74,7 +74,9 @@ If the hierarchy shows no `resource-id` and text is ambiguous:
 
 ### Step 4 — Determine fix
 
-Apply the selector priority hierarchy:
+Apply the selector priority hierarchy — see
+[shared-references/selector-rules.md](../../skills/shared-references/selector-rules.md)
+for the full decision tree:
 
 1. **Text selector** — use if `accessibilityText` matches exactly
 2. **`id:` selector** — use if `resource-id` exists
@@ -84,8 +86,8 @@ Apply the selector priority hierarchy:
    merged node
 5. **Leading `.*`** — use when route path prefixes
    `accessibilityText`
-6. **Add `Semantics`** — when no other selector is stable; never
-   use coordinates
+6. **Add `Semantics(identifier: '...', container: true)`** — when no
+   other selector is stable; never use coordinates
 
 ### Step 5 — Probe the fix
 

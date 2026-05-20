@@ -65,15 +65,17 @@ Run both in parallel:
 2. Call `mcp_maestro_mcp_inspect_screen` on the live device
    to get `accessibilityText`, `resource-id`, and bounds.
 
-Apply the selector priority hierarchy (from SKILL.md):
+Apply the selector priority hierarchy — see
+[shared-references/selector-rules.md](../../skills/shared-references/selector-rules.md)
+for the full decision tree and accessibility node merging rules:
 
-1. Text selector
-2. Semantic identifier (`id:`)
-3. Index for duplicate labels
-4. Relative positioning
+1. Text selector (`text:`)
+2. Semantic identifier (`id:`) — Flutter `Semantics(identifier: '...', container: true)`
+3. Index for duplicate labels (`text + index:`)
+4. Relative positioning (`below:`, `above:`)
 
-If no selector works, note that `Semantics(identifier: '...')` must
-be added to the Flutter widget — include this in your output summary.
+If no selector works, note that `Semantics(identifier: '...', container: true)` must
+be added to the Flutter widget and the app rebuilt — include this in your output summary.
 
 ### Step 3 — Map localization keys
 

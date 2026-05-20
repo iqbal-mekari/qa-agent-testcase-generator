@@ -84,6 +84,7 @@ The pipeline enforces **mandatory human approval checkpoints** between phases. S
 - [Flutter Semantics guide](skills/create-maestro-script/references/flutter-semantics.md) — how to add `identifier:` to Flutter widgets
 - [Testcase YAML template](skills/create-maestro-script/references/testcase_template.yaml)
 - [Scenario YAML template](skills/create-maestro-script/references/scenario_template.yaml)
+- [Examples](examples/) — sample CSV input, testcase YAML, and scenario YAML with pipeline walkthrough
 
 ## MCP Tools Available
 

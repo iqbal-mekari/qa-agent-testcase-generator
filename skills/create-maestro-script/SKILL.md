@@ -116,6 +116,8 @@ Each `testcases/<feature>/` folder maps 1-to-1 with a screen (or a major section
 
 ### Rule 2: Never Use Point Coordinates
 
+> **Full reference:** See [shared-references/selector-rules.md](../../shared-references/selector-rules.md) for the complete selector decision tree, accessibility node merging rules, and timeout conventions.
+
 **Selector Priority Hierarchy**
 
 Before writing selectors, gather context from:
@@ -125,73 +127,32 @@ Before writing selectors, gather context from:
 
 Then follow this priority order:
 
-1. **Text selector** — Element has visible, stable text
+1. `text:` — visible, stable label on the element
+2. `id:` — Semantics `identifier:` (always paired with `container: true` in Flutter)
+3. `text + index:` — when the same text appears in header AND button
+4. Relative positioning (`below:`, `above:`) — last resort before code change
+5. Add `Semantics(identifier: '...', container: true)` to Flutter source if nothing works — **never use coordinates**
 
-   ```yaml
-   - tapOn: 'Login'
-   - assertVisible: 'Welcome'
-   ```
+**Common patterns:**
 
-2. **Semantic identifier** — Element has no visible text but has resource ID/semantic tag
+```yaml
+# Text selector
+- tapOn: 'Login'
 
-   ```yaml
-   - tapOn:
-       id: 'email_field'
-   - inputText: 'test@example.com'
-   ```
+# Semantic identifier
+- tapOn:
+    id: 'email_field'
 
-   **IMPORTANT:** When adding Semantics to Flutter widgets for testing:
-   - Use `identifier:` in Flutter (maps to `id:` in Maestro)
-   - ALWAYS set `container: true`
+# Index for duplicate labels (title + button)
+- tapOn:
+    text: '${output.localization.submitAction}'
+    index: 1  # 0 = title/header, 1 = button
 
-   ```dart
-   Semantics(
-     identifier: 'widget_name',  // Maps to id: in Maestro
-     container: true,             // Always set container: true
-     child: YourWidget(),
-   )
-   ```
-
-3. **Index** — When duplicate text labels exist (e.g., "Submit" appears in header AND button)
-
-   ```yaml
-   # Use index to specify which occurrence to tap
-   # index: 0 = first occurrence (top of screen)
-   # index: 1 = second occurrence, etc.
-   - tapOn:
-       text: 'Submit'
-       index: 1 # Tap the second "Submit" (skips header, taps button)
-   ```
-
-   **Common pattern for duplicate labels:**
-   - Many screens have the same text in the header/app bar AND as a button
-   - Use `index: 1` to tap the button (second occurrence) instead of the header
-   - Always verify with `inspect_screen` to see the element order
-
-   **Common pattern for CTA buttons without `resource-id`:**
-   Buttons with no `Semantics` identifier have no `resource-id` in the view hierarchy.
-   When the button label also appears in the screen title, use `text + index` to target the button:
-
-   ```yaml
-   # Wrong: resource-id does not exist on the element
-   - tapOn:
-       id: 'submit-button' # WRONG if widget has no Semantics
-
-   # Correct: target the button as the Nth occurrence of its text
-   - tapOn:
-       text: '${output.localization.submitAction}'
-       index: 1 # 0 = title/header, 1 = the button
-   ```
-
-4. **Relative positioning** — When text/ID is still ambiguous after using index
-
-   ```yaml
-   - tapOn:
-       text: 'Submit'
-       below: 'Terms and Conditions'
-   ```
-
-If no selector works, add `Semantics(identifier: 'widget_key')` to the Flutter widget and use the new `id:` selector. **Never fall back to coordinates.**
+# Relative positioning
+- tapOn:
+    text: 'Submit'
+    below: 'Terms and Conditions'
+```
 
 **IMPORTANT:** After adding `Semantics` or any code changes to enable selectors, you MUST rebuild and reinstall the app before re-running scenarios:
 
