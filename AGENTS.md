@@ -72,9 +72,10 @@ The pipeline enforces **mandatory human approval checkpoints** for gates 1 and 2
 |------|---------|-----------------|
 | Gate 1 | Test case generation → Maestro scripting | Generated CSV completeness & correctness |
 | Gate 2 | Mapping table → YAML writing | Triage decisions (automate/skip/setup) |
-| Gate 3 | YAML generation → Test execution | Automatic execution starts after YAML generation; no human approval required |
 
 **Rule:** Agents must never proceed past gates 1 or 2 without explicit human approval.
+
+After YAML generation, execution starts automatically.
 
 ## Reference Files
 

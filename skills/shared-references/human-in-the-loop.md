@@ -1,6 +1,6 @@
 # Human-in-the-Loop Confirmation Gate
 
-This document defines the explicit approval checkpoints where a human must confirm before the pipeline proceeds to the next phase. Gate 3 is now automatic and does not require human approval.
+This document defines the explicit approval checkpoints where a human must confirm before the pipeline proceeds to the next phase.
 
 ## Pipeline Flow with Gates
 
@@ -65,7 +65,6 @@ This document defines the explicit approval checkpoints where a human must confi
 │                                                                         │
 └──────────────────────────────┬──────────────────────────────────────────┘
                                │
-                               │
 ┌──────────────────────────────▼──────────────────────────────────────────┐
 │                                                                         │
 │  Phase 4: Execution & Self-Healing                                      │
@@ -119,21 +118,6 @@ This document defines the explicit approval checkpoints where a human must confi
 3. Wait for user response before delegating to sub-agents.
 
 **If adjustments:** Update mapping entries and re-present.
-
----
-
-### Gate 3: Automatic Execution
-
-**When:** After all testcase + scenario YAML files are generated.
-
-**What happens:**
-- The agent starts execution automatically.
-- The human can review results after execution, but no approval is required to begin.
-
-**Agent behavior:**
-1. Present a summary of files created (paths, line counts, selector types used).
-2. Run the generated scripts on the device.
-3. If failures occur, invoke the debugging flow.
 
 ---
 
