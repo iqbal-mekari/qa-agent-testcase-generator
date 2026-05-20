@@ -64,8 +64,22 @@ maestro/
 - Categories: `Smoke` (P0 core happy path) or `Regression` (everything else)
 - Output path: `/test-cases/{epic_key}_{short_desc}_test_cases.csv` + smoke-only variant
 
+## Human-in-the-Loop Gates
+
+The pipeline enforces **mandatory human approval checkpoints** between phases. See [human-in-the-loop.md](skills/shared-references/human-in-the-loop.md) for full details.
+
+| Gate | Between | What's reviewed |
+|------|---------|-----------------|
+| Gate 1 | Test case generation → Maestro scripting | Generated CSV completeness & correctness |
+| Gate 2 | Mapping table → YAML writing | Triage decisions (automate/skip/setup) |
+| Gate 3 | YAML generation → Test execution | Generated scripts quality & naming |
+
+**Rule:** Agents must never proceed past a gate without explicit human approval.
+
 ## Reference Files
 
+- [Human-in-the-loop gates](skills/shared-references/human-in-the-loop.md) — mandatory approval checkpoints between pipeline phases
+- [Selector rules](skills/shared-references/selector-rules.md) — single source of truth for Maestro selector strategies
 - [Failure patterns](skills/debug-maestro-script/references/failure-patterns.md) — living knowledge base; check before debugging, append after fixing
 - [Flutter Semantics guide](skills/create-maestro-script/references/flutter-semantics.md) — how to add `identifier:` to Flutter widgets
 - [Testcase YAML template](skills/create-maestro-script/references/testcase_template.yaml)

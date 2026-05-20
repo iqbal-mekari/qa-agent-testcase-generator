@@ -1,0 +1,14 @@
+# Expected output: maestro/testcases/login/verify_login_form_visible.yaml
+appId: ${APP_ID}
+tags:
+  - login
+  - smoke
+---
+- runFlow:
+    when:
+      visible: Allow|While using.*
+    file: ../../commons/dismiss_permission_dialog.yaml
+- assertVisible: '${output.localization.emailPlaceholder}.*'
+- assertVisible: '${output.localization.passwordPlaceholder}.*'
+- assertVisible: '${output.localization.loginButton}'
+- assertVisible: '${output.localization.forgotPassword}'

@@ -177,6 +177,25 @@ and MCP tools. Never create Python scripts, shell scripts, or any
 intermediary programs to generate CSV or Jira output. The agent
 already has all the data — write it directly.
 
+## Human-in-the-Loop Gate (🚦 GATE 1)
+
+After generating test cases, **always present a summary and wait for
+explicit human approval** before considering the task complete or
+passing output to downstream agents (e.g., `maestro-script-creator`).
+
+**Required behavior:**
+1. Present: total test case count, breakdown by category (Smoke/Regression),
+   coverage areas, and the CSV file path.
+2. Ask the user: _"Test cases are ready for review at `{csv_path}`.
+   Would you like me to proceed to Maestro script generation, make
+   changes, or stop here?"_
+3. **Wait for explicit confirmation** before any next step.
+4. If the user requests changes, apply them and re-present.
+5. Only proceed to Maestro automation if the user explicitly approves.
+
+See [human-in-the-loop.md](../skills/shared-references/human-in-the-loop.md)
+for the full pipeline gate specification.
+
 ## Guiding Principles
 
 - **Mobile UI only**: Every test case must validate a mobile screen

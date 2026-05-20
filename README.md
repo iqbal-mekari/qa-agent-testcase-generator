@@ -86,11 +86,30 @@ skills/
 │       ├── flutter-semantics.md
 │       ├── scenario_template.yaml
 │       └── testcase_template.yaml
-└── debug-maestro-script/
-    ├── SKILL.md
-    └── references/
-        └── failure-patterns.md
+├── debug-maestro-script/
+│   ├── SKILL.md
+│   └── references/
+│       └── failure-patterns.md
+└── shared-references/
+    ├── human-in-the-loop.md               ← Mandatory approval gates between phases
+    └── selector-rules.md                  ← Single source of truth for selector strategies
+
+examples/
+├── README.md                              ← Pipeline walkthrough
+├── sample_input_test_cases.csv            ← Example CSV from test case generation
+├── sample_output_testcase.yaml            ← Example atomic Maestro testcase
+└── sample_output_scenario.yaml            ← Example Maestro scenario
 ```
+
+## Human-in-the-Loop Pipeline
+
+The pipeline enforces **3 mandatory human approval gates** before progressing between phases:
+
+```
+Test Case Generation → 🚦 Gate 1 → Mapping/Triage → 🚦 Gate 2 → YAML Generation → 🚦 Gate 3 → Execution
+```
+
+See [human-in-the-loop.md](skills/shared-references/human-in-the-loop.md) and [examples/](examples/) for details.
 
 ## How to Use
 

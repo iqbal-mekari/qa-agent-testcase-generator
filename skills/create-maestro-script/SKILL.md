@@ -74,7 +74,7 @@ Existing test files may use legacy conventions (e.g., `topics/` folders, `_C<id>
 Before using this skill, ensure you have:
 
 1. **Maestro MCP tools available** — The MCP server must be running and accessible
-2. **Maestro syntax reference** — Call `mcp__Maestro_MCP__cheat_sheet` to get command reference
+2. **Maestro syntax reference** — Call `mcp_maestro_mcp_cheat_sheet` to get command reference
 3. **Understanding of folder structure**:
    - `testcases/` — Atomic tests (single scenario, AAA + hooks)
    - `scenarios/` — User journeys (orchestrates testcases)
@@ -120,7 +120,7 @@ Each `testcases/<feature>/` folder maps 1-to-1 with a screen (or a major section
 
 Before writing selectors, gather context from:
 
-1. **Live UI tree** — `mcp__Maestro_MCP__inspect_screen` for runtime text/IDs/states
+1. **Live UI tree** — `mcp_maestro_mcp_inspect_screen` for runtime text/IDs/states
 2. **Screen source code** — Read Flutter screen file for widget keys (`Key('...')`), `Semantics(identifier: '...')`, and stable string constants
 
 Then follow this priority order:
@@ -291,10 +291,10 @@ Always validate scenarios by running them through `maestro test` directly.
 
 **When a flow fails:**
 
-1. **Take screenshot FIRST** — Use `mcp__Maestro_MCP__take_screenshot` to capture current screen state
-2. **Then inspect view hierarchy** — Use `mcp__Maestro_MCP__inspect_screen` to reveal real accessibilityText, resource-id, element bounds
+1. **Take screenshot FIRST** — Use `mcp_maestro_mcp_take_screenshot` to capture current screen state
+2. **Then inspect view hierarchy** — Use `mcp_maestro_mcp_inspect_screen` to reveal real accessibilityText, resource-id, element bounds
 3. **Trust screenshot/hierarchy as source of truth** — If screenshot/hierarchy show the previous screen but Maestro output indicates it's on the next screen, the navigation FAILED. Fix the navigation step before proceeding.
-4. Probe inline with `mcp__Maestro_MCP__run` (inline `yaml:`) to test a single corrected command before editing YAML
+4. Probe inline with `mcp_maestro_mcp_run` (inline `yaml:`) to test a single corrected command before editing YAML
 5. Fix the YAML file
 6. Re-run full integration via `maestro test` to confirm end-to-end fix
 
@@ -526,10 +526,10 @@ Recommended columns: CSV Test Case, Priority, Automate?, Screen Folder, Testcase
 After mapping is confirmed, implement each file following testcase template:
 
 1. **Do NOT include navigation** — testcases are atomic and assume they're already on the target screen
-2. Use `mcp__Maestro_MCP__inspect_screen` + source code to find selectors (Rule 3)
+2. Use `mcp_maestro_mcp_inspect_screen` + source code to find selectors (Rule 3)
 3. **Handle screens not ready for interaction** — Use repeat pattern to retry taps if needed
 4. Write ARRANGE → ACT → ASSERT
-5. Run via `mcp__Maestro_MCP__run` (inline `yaml:`) to validate before saving
+5. Run via `mcp_maestro_mcp_run` (inline `yaml:`) to validate before saving
 
 **Step 6 · Write the scenario**
 
@@ -546,11 +546,11 @@ Once all testcases exist, compose the scenario:
 
 This skill uses the following Maestro MCP tools:
 
-- `mcp__Maestro_MCP__cheat_sheet` — Get Maestro syntax reference
-- `mcp__Maestro_MCP__inspect_screen` — Get UI element tree as compact JSON
-- `mcp__Maestro_MCP__run` — Execute Maestro commands: inline `yaml:`, specific `files:`, or a `dir:` with tag filters; syntax is validated automatically
-- `mcp__Maestro_MCP__take_screenshot` — Capture screen for debugging
-- `mcp__Maestro_MCP__list_devices` — List available devices
+- `mcp_maestro_mcp_cheat_sheet` — Get Maestro syntax reference
+- `mcp_maestro_mcp_inspect_screen` — Get UI element tree as compact JSON
+- `mcp_maestro_mcp_run` — Execute Maestro commands: inline `yaml:`, specific `files:`, or a `dir:` with tag filters; syntax is validated automatically
+- `mcp_maestro_mcp_take_screenshot` — Capture screen for debugging
+- `mcp_maestro_mcp_list_devices` — List available devices
 
 ## References
 

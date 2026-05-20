@@ -37,7 +37,7 @@ Diagnose and fix failing Maestro flows for Android/iOS mobile apps. Follows a **
 4. **Run the scenario** via MCP:
 
    ```
-   mcp__Maestro_MCP__run  files=[failing_file.yaml]  env={APP_ID, LOCALE, ...}
+   mcp_maestro_mcp_run  files=[failing_file.yaml]  env={APP_ID, LOCALE, ...}
    ```
 
    Capture the exact error: which command failed and the error message.
@@ -49,7 +49,7 @@ Diagnose and fix failing Maestro flows for Android/iOS mobile apps. Follows a **
 6. **Inspect the view hierarchy**:
 
    ```
-   mcp__Maestro_MCP__inspect_screen
+   mcp_maestro_mcp_inspect_screen
    ```
 
    Look for:
@@ -64,7 +64,7 @@ Diagnose and fix failing Maestro flows for Android/iOS mobile apps. Follows a **
 
 8. **Test the corrected command** without editing the file:
    ```
-   mcp__Maestro_MCP__run  yaml="appId: <APP_ID>\n---\n- <corrected_command>"
+   mcp_maestro_mcp_run  yaml="appId: <APP_ID>\n---\n- <corrected_command>"
    ```
    Confirm it succeeds before touching the YAML.
 
@@ -120,7 +120,9 @@ See [failure-patterns.md](./references/failure-patterns.md) for the full referen
 
 ## Selector Decision Tree
 
-Before writing any selector, get the actual element data from the hierarchy:
+For the full selector priority hierarchy, decision tree, and accessibility node merging rules, see [shared-references/selector-rules.md](../shared-references/selector-rules.md).
+
+**Quick reference:**
 
 ```
 hierarchy element has `txt` (non-empty)?

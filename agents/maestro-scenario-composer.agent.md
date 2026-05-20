@@ -120,7 +120,7 @@ When a step fails:
 3. Fix the scenario YAML (do not modify testcase files).
 4. Re-run to confirm the fix before saving.
 
-### Step 6 — Save
+### Step 5 — Save
 
 Save to:
 

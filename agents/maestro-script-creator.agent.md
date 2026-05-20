@@ -100,14 +100,16 @@ Classify each test case:
 - ❌ **Skip** — hard dependency Maestro cannot satisfy. Add a
   `# SKIP:` comment explaining why.
 
-### Step 5 — Present mapping table and confirm
+### Step 5 — Present mapping table and confirm (🚦 GATE 2)
 
 Present a mapping table to the user before writing any YAML:
 
 | Test Case | Priority | Automate? | Screen Folder | Testcase File | Notes |
 | --------- | -------- | --------- | ------------- | ------------- | ----- |
 
-Wait for explicit user confirmation before proceeding.
+**⛔ MANDATORY GATE:** Wait for explicit user confirmation ("proceed",
+"confirm", "yes", or equivalent) before proceeding. If edits are
+requested, apply them and re-present the table. Never proceed silently.
 
 ### Step 6 — Discover selectors
 
@@ -156,7 +158,7 @@ invoke the `maestro-selector-debugger` sub-agent with:
 Apply the fix returned by the sub-agent to the relevant YAML file
 before re-running.
 
-## Output Summary
+## Output Summary (🚦 GATE 3)
 
 After completion, present:
 
@@ -165,3 +167,7 @@ After completion, present:
 - List of skipped test cases with reasons.
 - List of test cases needing manual setup (env vars required).
 - Any `Semantics` additions needed in Flutter source code.
+
+**⛔ MANDATORY GATE:** Ask the user: _"I've generated the scripts
+above. Would you like me to run them on the device, review any files,
+or make changes?"_ Do not auto-execute tests without confirmation.

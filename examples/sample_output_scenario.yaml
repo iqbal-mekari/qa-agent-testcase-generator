@@ -1,0 +1,31 @@
+# Expected output: maestro/scenarios/login/login_full_journey.yaml
+appId: ${APP_ID}
+tags:
+  - login
+  - journey
+onFlowStart:
+  - launchApp:
+      clearState: true
+      clearKeychain: true
+      stopApp: true
+      permissions:
+        all: allow
+  - runFlow: ../../utils/setup_platform_locale.yaml
+
+# --- Happy Path ---
+- runFlow: ../../testcases/login/verify_login_form_visible.yaml
+- runFlow: ../../testcases/login/tap_login_button_valid.yaml
+- assertVisible: '${output.localization.welcomeMessage}.*'
+
+# --- Reset ---
+- runFlow: ../../commons/logout.yaml
+- runFlow: ../../commons/navigate_to_login.yaml
+
+# --- Error Path: Empty Email ---
+- runFlow: ../../testcases/login/submit_empty_email.yaml
+
+# --- Reset ---
+- runFlow: ../../commons/navigate_to_login.yaml
+
+# --- Error Path: Invalid Credentials ---
+- runFlow: ../../testcases/login/submit_wrong_password.yaml
