@@ -20,6 +20,13 @@ triggers:
   - regenerate test cases
   - update test cases
   - test cases from Figma
+  - impact analysis
+  - analyze impact
+  - which tests affected
+  - PR impact
+  - diff impact
+  - what modules changed
+  - tomo search
 tools:
   - mcp_atlassian_getJiraIssue
   - mcp_atlassian_getConfluencePage
@@ -75,12 +82,13 @@ disabled, navigate, wait for element.
 
 ## Skills
 
-This agent orchestrates two skills:
+This agent orchestrates three skills:
 
 | Skill | Purpose | Trigger |
 |-------|---------|---------|
 | `create-test-cases` | Generate new test cases from requirements | User provides Jira URL, PRD, Figma link, or description |
 | `regenerate-test-cases` | Update test cases based on code changes | User references a git diff, PR, or asks to refresh existing cases |
+| `impact-analysis` | Identify impacted modules and test cases from a PR/branch diff using tomo_search (Dart AST) + semantic AI matching | User asks which tests are affected by a PR or branch |
 
 ## Workflow Selection
 
@@ -91,6 +99,13 @@ When the user provides input, determine which skill to invoke:
   changes.
 - **Regenerate** → User mentions code changes, provides a PR/branch
   diff, or asks to update/refresh existing test cases.
+- **Impact Analysis** → User asks which tests are affected, wants to
+  know the blast radius of a PR/branch, or wants to know which modules
+  changed. Run `impact-analysis` first; optionally pipe its JSON output
+  into `regenerate-test-cases` for targeted updates.
+
+**Recommended flow for large PRs:**
+`impact-analysis` → JSON output → `regenerate-test-cases`
 
 If ambiguous, ask one clarifying question to determine intent.
 

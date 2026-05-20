@@ -58,6 +58,7 @@ Diagnoses and fixes failing Maestro selectors. Takes a screenshot, inspects the 
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `create-test-cases`     | Generate structured mobile UI test cases from Jira tickets, PRDs, Figma designs, or feature descriptions. Outputs as Jira comments and CSV in `/test-cases/`.                   |
 | `regenerate-test-cases` | Update existing mobile UI test cases when code changes are detected (git diffs, PRs, or existing CSVs). Adds new cases, modifies affected ones, and flags obsolete cases.       |
+| `impact-analysis`       | Identify impacted modules and test cases from a PR or branch diff using [tomo_search](https://github.com/timiwinibiti/tomo_search) (Dart AST-based scope detection) + full semantic AI matching. Outputs structured JSON consumed by `regenerate-test-cases`. |
 | `create-maestro-script` | Create Maestro testcase and scenario YAML files for Flutter apps from a CSV test plan. Covers folder structure, selector strategies, localization patterns, and test execution. |
 | `debug-maestro-script`  | Debug failing Maestro flows (exit code 1, element not found, assertion failures, broken selectors). Follows a read → run → screenshot → hierarchy → probe → fix → re-run loop.  |
 
@@ -77,6 +78,8 @@ skills/
 │   └── SKILL.md
 ├── regenerate-test-cases/
 │   └── SKILL.md
+├── impact-analysis/
+│   └── SKILL.md                           ← tomo_search-powered PR/branch impact analysis
 ├── create-maestro-script/
 │   ├── SKILL.md
 │   └── references/
@@ -111,6 +114,18 @@ Update test cases based on this PR: https://github.com/.../pull/123
 Refresh test cases against /test-cases/QON_contact_test_cases.csv
 ```
 
+### Analyze PR/branch impact before regenerating
+
+```
+Run impact analysis on PR #42
+
+What modules are impacted by branch feature/attendance-clock-in?
+
+Which test cases need reassessment for this PR: https://github.com/.../pull/88
+```
+
+> **Recommended flow for large PRs:** Run `impact-analysis` first to get a precise list of affected test cases, then pass its JSON output to `regenerate-test-cases` for targeted updates.
+
 ### Create Maestro UI test scripts
 
 ```
@@ -136,6 +151,20 @@ Fix maestro test: scenarios/checkout/checkout_full_journey.yaml exits with code 
 | `qa-test-case-generator`  | Jira comments + CSV in `/test-cases/`                       |
 | `maestro-script-creator`  | YAML files in `maestro/testcases/` and `maestro/scenarios/` |
 | `maestro-script-debugger` | Fixed YAML files + updated `failure-patterns.md`            |
+
+### Skill: `impact-analysis` output
+
+```json
+{
+  "analysis_metadata": { "source": "PR #42", "target_branch": "develop" },
+  "impact_summary": { "total_test_cases_affected": 7 },
+  "impacted_modules": [ { "module": "attendance", "scopes": ["AttendanceService.clockIn"] } ],
+  "recommended_test_cases": [
+    { "tc_id": "TC005", "confidence": "HIGH", "recommended_action": "MODIFY" },
+    { "tc_id": "NEW",   "confidence": "HIGH", "recommended_action": "CREATE" }
+  ]
+}
+```
 
 4. GitHub Copilot will automatically use the updated configuration
 
