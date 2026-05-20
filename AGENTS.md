@@ -30,6 +30,7 @@ This workspace contains VS Code Copilot **agent definitions** and **skills** for
 | [`debug-maestro-script`](skills/debug-maestro-script/SKILL.md) | Debugging a failing Maestro flow |
 | [`create-test-cases`](skills/create-test-cases/SKILL.md) | Generating new mobile UI test cases |
 | [`regenerate-test-cases`](skills/regenerate-test-cases/SKILL.md) | Updating test cases from code diffs or PRs |
+| [`impact-analysis`](skills/impact-analysis/SKILL.md) | Identifying impacted modules & test cases from PR/branch diffs via tomo_search |
 
 ## Maestro Conventions
 

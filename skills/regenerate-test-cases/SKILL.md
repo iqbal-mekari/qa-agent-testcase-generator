@@ -43,6 +43,22 @@ Ignore changes that only affect:
 
 ## Input Sources
 
+### 0. Impact Analysis JSON (Preferred — from `impact-analysis` skill)
+
+When `impact-analysis` has already been run, its structured JSON output
+provides a pre-filtered, high-confidence list of affected test cases:
+
+1. Read the JSON output from `impact-analysis`.
+2. Focus only on test cases with `recommended_action` of MODIFY, CREATE,
+   or REMOVE.
+3. Use the `reason` and `impacted_by_scopes` fields to understand WHY
+   each test case is affected.
+4. Skip the broad diff scanning phase — tomo_search already did it.
+
+This is significantly more efficient than scanning raw diffs, especially
+for large PRs, because tomo_search uses AST-level scope detection to
+identify the precise blast radius.
+
 ### 1. Git Diff (Branch Comparison)
 
 When the user references a branch or asks to compare against main:
