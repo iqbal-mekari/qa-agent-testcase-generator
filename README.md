@@ -103,10 +103,10 @@ examples/
 
 ## Human-in-the-Loop Pipeline
 
-The pipeline enforces **3 mandatory human approval gates** before progressing between phases:
+The pipeline enforces **2 mandatory human approval gates** before progressing between phases:
 
 ```
-Test Case Generation → 🚦 Gate 1 → Mapping/Triage → 🚦 Gate 2 → YAML Generation → 🚦 Gate 3 → Execution
+Test Case Generation → 🚦 Gate 1 → Mapping/Triage → 🚦 Gate 2 → YAML Generation → Execution
 ```
 
 See [human-in-the-loop.md](skills/shared-references/human-in-the-loop.md) and [examples/](examples/) for details.

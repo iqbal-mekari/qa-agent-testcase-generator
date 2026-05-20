@@ -26,7 +26,7 @@ This directory contains sample artifacts illustrating the pipeline's input/outpu
 6. maestro-testcase-writer → sample_output_testcase.yaml (×N files)
    maestro-scenario-composer → sample_output_scenario.yaml
        ↓
-7. 🚦 GATE 3: Human reviews scripts, approves execution
+7. Scripts are generated and execution starts automatically
        ↓
 8. mcp_maestro_mcp_run executes tests
        ↓

@@ -1,6 +1,6 @@
 # Human-in-the-Loop Confirmation Gate
 
-This document defines the explicit approval checkpoints where a human must confirm before the pipeline proceeds to the next phase.
+This document defines the explicit approval checkpoints where a human must confirm before the pipeline proceeds to the next phase. Gate 3 is now automatic and does not require human approval.
 
 ## Pipeline Flow with Gates
 
@@ -65,16 +65,6 @@ This document defines the explicit approval checkpoints where a human must confi
 │                                                                         │
 └──────────────────────────────┬──────────────────────────────────────────┘
                                │
-                    ┌──────────▼──────────┐
-                    │   🚦 GATE 3         │
-                    │   Human reviews     │
-                    │   generated scripts │
-                    │                     │
-                    │   ✅ Run tests      │
-                    │   ✏️  Request fixes   │
-                    │   ❌ Discard         │
-                    └──────────┬──────────┘
-                               │ (only on ✅ Run tests)
                                │
 ┌──────────────────────────────▼──────────────────────────────────────────┐
 │                                                                         │
@@ -82,7 +72,7 @@ This document defines the explicit approval checkpoints where a human must confi
 │  ─────────────────────────────────────────────────────────────────────  │
 │                                                                         │
 │  Agent: maestro-script-debugger (if failures occur)                     │
-│    • Runs tests → detects failures                                      │
+│    • Runs tests automatically after YAML generation                     │
 │    • Screenshots + hierarchy inspection                                 │
 │    • Auto-fixes selectors (self-healing)                                │
 │    • Re-runs to verify fix                                              │
@@ -132,29 +122,25 @@ This document defines the explicit approval checkpoints where a human must confi
 
 ---
 
-### Gate 3: Script Review
+### Gate 3: Automatic Execution
 
 **When:** After all testcase + scenario YAML files are generated.
 
-**What the human reviews:**
-- YAML file structure and naming
-- Selector strategies used
-- Scenario flow logic
-- Localization key correctness
+**What happens:**
+- The agent starts execution automatically.
+- The human can review results after execution, but no approval is required to begin.
 
 **Agent behavior:**
 1. Present a summary of files created (paths, line counts, selector types used).
-2. Explicitly ask: _"I've generated {N} testcase files and {M} scenario files. Would you like me to run them on the device, or do you want to review first?"_
-3. Wait for user response.
-
-**If fixes requested:** Apply changes and re-present.
+2. Run the generated scripts on the device.
+3. If failures occur, invoke the debugging flow.
 
 ---
 
 ## Implementation Rules for Agents
 
-1. **Never skip a gate.** Each gate is mandatory — agents must pause and wait for human input.
+1. **Never skip gates 1 and 2.** Those gates are mandatory — agents must pause and wait for human input.
 2. **Present context.** Always show enough information at the gate for the human to make an informed decision (file paths, counts, key decisions made).
-3. **No silent progression.** An agent must not proceed from Phase N to Phase N+1 without the human explicitly saying "proceed", "confirm", "yes", or equivalent.
-4. **Loop on edits.** If the human requests changes at any gate, the agent applies them and re-presents for approval at the same gate.
+3. **No silent progression.** An agent must not proceed from Phase 1 to Phase 2 or Phase 2 to Phase 3 without the human explicitly saying "proceed", "confirm", "yes", or equivalent.
+4. **Loop on edits.** If the human requests changes at gates 1 or 2, the agent applies them and re-presents for approval at the same gate.
 5. **Record decisions.** After each gate approval, log the decision (what was approved and any modifications requested) in the session context for traceability.

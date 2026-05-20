@@ -158,7 +158,7 @@ invoke the `maestro-selector-debugger` sub-agent with:
 Apply the fix returned by the sub-agent to the relevant YAML file
 before re-running.
 
-## Output Summary (🚦 GATE 3)
+## Output Summary
 
 After completion, present:
 
@@ -168,6 +168,5 @@ After completion, present:
 - List of test cases needing manual setup (env vars required).
 - Any `Semantics` additions needed in Flutter source code.
 
-**⛔ MANDATORY GATE:** Ask the user: _"I've generated the scripts
-above. Would you like me to run them on the device, review any files,
-or make changes?"_ Do not auto-execute tests without confirmation.
+After presenting the summary, proceed to run the generated scripts on
+the device and hand failures to the debugger flow if needed.
